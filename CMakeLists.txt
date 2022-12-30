@@ -49,7 +49,7 @@ endif()
 lite_option(WITH_DSO                           "Compile PaddlePaddle with dynamic linked CUDA"                        ON)
 lite_option(WITH_AVX                           "Compile PaddlePaddle with AVX intrinsics"                             ON IF ${AVX_FOUND})
 lite_option(WITH_TESTING                       "Compile PaddlePaddle with unit testing"                               OFF)
-lite_option(WITH_MKL                           "Compile PaddlePaddle with MKL support."                               ON IF ${AVX_FOUND})
+lite_option(WITH_MKL                           "Compile PaddlePaddle with MKL support."                               OFF IF ${AVX_FOUND})
 lite_option(WITH_ARM_DOTPROD                   "Compile PaddlePaddle with ARM dot production"                         ON)
 lite_option(WITH_SYSTEM_BLAS                   "Use system blas library"                                              OFF)
 # for lite, both server and mobile framework.
@@ -58,6 +58,7 @@ lite_option(LITE_WITH_STATIC_LIB               "Enable static cplus lib in lite 
 lite_option(LITE_WITH_PYTHON                   "Enable Python api lib in lite mode"                                   OFF)
 lite_option(LITE_WITH_X86                      "Enable X86 in lite mode"                                              ON)
 lite_option(LITE_WITH_ARM                      "Enable ARM in lite mode"                                              OFF)
+lite_option(LITE_WITH_CSKY                     "Enable CSKY in lite mode"                                             OFF)
 lite_option(LITE_WITH_SW                       "Enable SW in lite mode"                                               OFF)
 lite_option(LITE_WITH_NNADAPTER                "Enable NNAdapter in lite mode"                                        OFF)
 lite_option(LITE_WITH_XPU                      "Enable XPU in lite mode"                                              OFF)
@@ -106,7 +107,7 @@ message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 # check options
 if(LITE_ON_TINY_PUBLISH)
-  if(NOT (LITE_WITH_ARM AND NOT WITH_TESTING))#LITE_WITH_JAVA AND
+  if(NOT ((LITE_WITH_ARM OR LITE_WITH_CSKY) AND NOT WITH_TESTING))#LITE_WITH_JAVA AND
     message(FATAL_ERROR "LITE_ON_TINY_PUBLISH=ON must be used with LITE_WITH_ARM=ON LITE_WITH_JAVA=ON WITH_TESTING=OFF")
     return()
   endif()
@@ -123,6 +124,7 @@ if(LITE_WITH_PYTHON)
 endif()
 
 # flatbuffer module for loading model
+message(STATUS "-----CMakeLists.txt:127:LITE_UPDATE_FBS_HEAD:${LITE_UPDATE_FBS_HEAD}------")
 if(LITE_UPDATE_FBS_HEAD)
   include(external/flatbuffers)
 else()

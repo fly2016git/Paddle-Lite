@@ -25,7 +25,8 @@ include(backends/x86)
 # Add dependencies
 include(generic)                # simplify cmake module
 include(configure)              # add paddle env configuration
-if(LITE_WITH_ARM)
+message(STATUS "${LITE_ON_TINY_PUBLISH}")
+if(LITE_WITH_ARM OR LITE_WITH_CSKY)
   message(STATUS "Building the mobile framework")
   include(postproject)
   if(NOT LITE_ON_TINY_PUBLISH)

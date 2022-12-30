@@ -139,6 +139,8 @@ TEST(PNorm, precision) {
   float abs_error = 2e-5;
 #if defined(LITE_WITH_ARM)
   place = TARGET(kHost);
+#elif defined(LITE_WITH_CSKY)
+  place = TARGET(kHost);
 #elif defined(LITE_WITH_X86)
   place = TARGET(kHost);
 #else

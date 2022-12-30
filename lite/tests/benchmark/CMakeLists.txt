@@ -1,4 +1,4 @@
-if((NOT LITE_WITH_OPENCL AND NOT LITE_WITH_NNADAPTER AND NOT LITE_WITH_XPU) AND (LITE_WITH_ARM))
+if((NOT LITE_WITH_OPENCL AND NOT LITE_WITH_NNADAPTER AND NOT LITE_WITH_XPU) AND (LITE_WITH_ARM OR LITE_WITH_CSKY))
     lite_cc_test(get_conv_latency SRCS src/get_conv_latency.cc)
     lite_cc_test(get_batchnorm_latency SRCS src/get_batchnorm_latency.cc)
     lite_cc_test(get_pooling_latency SRCS src/get_pooling_latency.cc)
@@ -30,7 +30,7 @@ IF (LITE_WITH_BENCHMARK_TEST)
     ADD_SUBDIRECTORY(${GOOGLEBENCHMARK_SOURCE_DIR} ${GOOGLEBENCHMARK_BUILD_DIR})
 
     #add test cases
-    if(LITE_WITH_ARM)
+    if(LITE_WITH_ARM OR LITE_WITH_CSKY)
         lite_cc_test(f32-gemm-bench-arm SRCS src/f32-gemm-arm.cc DEPS benchmark)
         lite_cc_test(elementwise-arm-math-bench SRCS src/elementwise_arm_math.cpp DEPS benchmark)
         lite_cc_test(int8-gemm-bench-arm SRCS src/int8-gemm-arm.cc DEPS benchmark)

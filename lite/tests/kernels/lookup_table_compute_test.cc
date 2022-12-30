@@ -111,7 +111,7 @@ TEST(LookupTable, precision) {
   LOG(INFO) << "test lookup_table op";
   float abs_error = 1e-5;
   Place place;
-#if defined(LITE_WITH_ARM)
+#if defined(LITE_WITH_ARM) || defined(LITE_WITH_CSKY)
   place = TARGET(kARM);
 #else
   return;

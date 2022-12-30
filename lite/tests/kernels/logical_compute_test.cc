@@ -139,6 +139,8 @@ TEST(Logical, precision) {
 #endif
 #elif defined(LITE_WITH_ARM)
   place = TARGET(kHost);
+#elif defined(LITE_WITH_CSKY)
+  place = TARGET(kHost);
 #elif defined(LITE_WITH_XPU)
   place = TARGET(kXPU);
 #else

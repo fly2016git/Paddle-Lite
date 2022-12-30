@@ -99,7 +99,8 @@ TEST(CrfDecoding, arm_precision) {
   arena.TestPrecision();
 #endif
 
-#ifdef LITE_WITH_ARM
+// #ifdef LITE_WITH_ARM
+#if defined(LITE_WITH_ARM) || defined(LITE_WITH_CSKY)
   Place place(TARGET(kHost));
   std::unique_ptr<arena::TestCase> tester(
       new CrfDecodingComputeTester(place, "def"));

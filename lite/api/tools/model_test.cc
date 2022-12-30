@@ -94,7 +94,8 @@ void OutputOptModel(const std::string& load_model_dir,
   LOG(INFO) << "Save optimized model to " << save_optimized_model_dir;
 }
 
-#ifdef LITE_WITH_ARM
+// #ifdef LITE_WITH_ARM
+#if defined(LITE_WITH_ARM) || defined(LITE_WITH_CSKY)
 void Run(const std::vector<std::vector<int64_t>>& input_shapes,
          const std::string& model_dir,
          const PowerMode power_mode,
@@ -303,7 +304,8 @@ int main(int argc, char** argv) {
     save_optimized_model_dir += ".nb";
   }
 
-#ifdef LITE_WITH_ARM
+// #ifdef LITE_WITH_ARM
+#if defined(LITE_WITH_ARM) || defined(LITE_WITH_CSKY)
   // Run inference using optimized model
   paddle::lite_api::Run(
       input_shapes,

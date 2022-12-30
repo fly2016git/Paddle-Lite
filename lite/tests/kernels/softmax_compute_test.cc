@@ -117,6 +117,8 @@ TEST(Softmax, precision) {
   place = TARGET(kXPU);
 #elif defined(LITE_WITH_ARM)
   place = TARGET(kARM);
+#elif defined(LITE_WITH_CSKY)
+  place = TARGET(kARM);
 #else
   return;
 #endif

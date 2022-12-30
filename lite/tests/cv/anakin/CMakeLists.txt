@@ -1,4 +1,4 @@
-if(LITE_WITH_CV AND (NOT LITE_WITH_OPENCL) AND LITE_WITH_ARM)
+if(LITE_WITH_CV AND (NOT LITE_WITH_OPENCL) AND (LITE_WITH_ARM OR LITE_WITH_CSKY))
   lite_cc_library(anakin_cv_arm SRCS
                   bgr_resize.cc
                   bgr_flip_hwc.cc

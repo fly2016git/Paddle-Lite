@@ -115,7 +115,7 @@ TEST(Topk, precision) {
 #else
   return;
 #endif
-#elif defined(LITE_WITH_X86) || defined(LITE_WITH_ARM)
+#elif defined(LITE_WITH_X86) || defined(LITE_WITH_ARM) 
   place = TARGET(kHost);
 #else
   return;

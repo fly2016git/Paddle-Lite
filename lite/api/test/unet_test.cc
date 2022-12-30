@@ -25,7 +25,8 @@
 namespace paddle {
 namespace lite {
 
-#ifdef LITE_WITH_ARM
+// #ifdef LITE_WITH_ARM
+#if defined(LITE_WITH_ARM) || defined(LITE_WITH_CSKY)
 TEST(unet, test) {
   DeviceInfo::Init();
   DeviceInfo::Global().SetRunMode(lite_api::LITE_POWER_HIGH, FLAGS_threads);

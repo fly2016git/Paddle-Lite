@@ -149,6 +149,11 @@ function init_cmake_mutable_options {
         with_x86=ON
         arm_target_os=""
         WITH_TINY_PUBLISH=OFF
+    elif [ "${ARCH}" == "csky" ]; then
+        with_csky=ON
+        csky_arch=$ARCH
+        csky_target_os=cskylinux
+        WITH_AVX=OFF
     else
         with_arm=ON
         arm_arch=$ARCH
@@ -175,6 +180,9 @@ function init_cmake_mutable_options {
     fi
 
     cmake_mutable_options="-DLITE_WITH_ARM=$with_arm \
+                        -DLITE_WITH_CSKY=$with_csky \
+                        -DCSKY_TARGET_ARCH_ABI=$csky_arch \
+                        -DCSKY_TARGET_OS=$csky_target_os \
                         -DLITE_WITH_X86=$with_x86 \
                         -DARM_TARGET_ARCH_ABI=$arm_arch \
                         -DARM_TARGET_OS=$arm_target_os \
@@ -389,7 +397,7 @@ function print_usage {
     echo -e "|     ./lite/tools/build_linux.sh help                                                                                                                 |"
     echo -e "|                                                                                                                                                      |"
     echo -e "|  optional argument:                                                                                                                                  |"
-    echo -e "|     --arch: (armv8|armv7hf|armv7|x86), default is armv8                                                                                              |"
+    echo -e "|     --arch: (armv8|armv7hf|armv7|x86|csky), default is armv8                                                                                              |"
     echo -e "|     --toolchain: (gcc|clang), defalut is gcc                                                                                                         |"
     echo -e "|     --with_extra: (OFF|ON); controls whether to publish extra operators and kernels for (sequence-related model such as OCR or NLP), default is OFF  |"
     echo -e "|     --with_python: (OFF|ON); controls whether to build python lib or whl, default is OFF                                                             |"

@@ -249,7 +249,7 @@ add_library(ops STATIC ${OPS_SRC} op_params.cc)
 add_dependencies(ops utils)
 
 if (NOT LITE_WITH_X86)
-    if(NOT LITE_WITH_ARM)
+    if((NOT LITE_WITH_ARM) OR (NOT LITE_WITH_CSKY))
         lite_cc_test(test_one_hot_op SRCS one_hot_op_test.cc)
     endif()
     lite_cc_test(test_fc_op SRCS fc_op_test.cc)

@@ -1,4 +1,4 @@
-if(NOT LITE_WITH_ARM)
+if((NOT LITE_WITH_ARM))
   return()
 endif()
 

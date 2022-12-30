@@ -1,4 +1,4 @@
-if (NOT LITE_WITH_ARM)
+if ((NOT LITE_WITH_ARM) AND (NOT LITE_WITH_CSKY))
   # NOTE disabled for the proto_desc is not valid yet.
   # TODO(Superjomn) enable them if valid latter.
   # lite_cc_test(test_identity_scale_eliminate_pass

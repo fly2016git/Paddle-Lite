@@ -62,6 +62,11 @@ lite_cc_library(core SRCS ${CORE_SRC}
   NNADAPTER_DEPS nnadapter_wrapper)
 
 #-------------------------------------------- GET CODE META INFO ------------------------------------------
+message(STATUS "------------------ lite/core/CMakeLists.txt: 65 -------------------")
+message(STATUS "PADDLE_SOURCE_DIR:${PADDLE_SOURCE_DIR}")
+message(STATUS "OUTPUT_VARIABLE:${OUTPUT_VARIABLE}")
+message(STATUS "PADDLE_LITE_TAG:${PADDLE_LITE_TAG}")
+message(STATUS "OUTPUT_STRIP_TRAILING_WHITESPACE:${OUTPUT_STRIP_TRAILING_WHITESPACE}")
 if (LITE_WITH_CODE_META_INFO)
   execute_process (
     COMMAND git describe --tags --exact-match
@@ -89,6 +94,7 @@ if (LITE_WITH_CODE_META_INFO)
   message (STATUS "commit: ${PADDLE_LITE_COMMIT}")
 endif ()
 configure_file (version.h.in version.h)
+message(STATUS "------------------ lite/core/CMakeLists.txt: 97 -------------------")
 #----------------------------------------------- NOT CHANGE -----------------------------------------------
 
 
@@ -100,7 +106,7 @@ add_subdirectory(test)
 
 
 # for mobile, unnecessary to compile the following testings.
-if(LITE_WITH_ARM)
+if(LITE_WITH_ARM OR LITE_WITH_CSKY)
   return ()
 endif ()
 

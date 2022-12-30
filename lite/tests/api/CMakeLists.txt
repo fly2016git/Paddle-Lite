@@ -40,7 +40,7 @@ function(lite_cc_test_with_model_and_data TARGET)
     endif()
 endfunction()
 
-if(LITE_WITH_ARM)
+if(LITE_WITH_ARM OR LITE_WITH_CSKY)
     lite_cc_test_with_model_and_data(test_inception_v4_fp32_arm MODEL inception_v4 DATA ILSVRC2012_500)
     lite_cc_test_with_model_and_data(test_mobilenet_v1_fp32_arm MODEL mobilenet_v1 DATA ILSVRC2012_500)
     lite_cc_test_with_model_and_data(test_mobilenet_v1_int8_dygraph_arm MODEL mobilenetv1_int8_dygraph_for_arm DATA ILSVRC2012_500)

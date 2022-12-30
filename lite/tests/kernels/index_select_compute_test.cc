@@ -125,7 +125,7 @@ void TestIndex_select(const Place& place) {
 
 TEST(Index_select, precision) {
   Place place;
-#if defined(LITE_WITH_ARM)
+#if defined(LITE_WITH_ARM) || defined(LITE_WITH_CSKY)
   place = TARGET(kHost);
 #elif defined(LITE_WITH_X86)
   place = TARGET(kHost);

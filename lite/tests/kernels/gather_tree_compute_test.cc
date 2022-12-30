@@ -111,7 +111,7 @@ void TestGatherTree(Place place,
 TEST(gather_tree, precision) {
   float abs_error = 1e-5;
   Place place;
-#if defined(LITE_WITH_ARM) || defined(LITE_WITH_X86)
+#if defined(LITE_WITH_ARM) || defined(LITE_WITH_CSKY) || defined(LITE_WITH_X86)
   place = TARGET(kHost);
 #else
   return;

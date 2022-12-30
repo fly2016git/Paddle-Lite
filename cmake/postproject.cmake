@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if(NOT LITE_WITH_ARM)
+if(NOT LITE_WITH_ARM OR NOT LITE_WITH_CSKY)
     return()
 endif()
 include(CheckCXXCompilerFlag)

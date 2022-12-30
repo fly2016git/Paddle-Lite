@@ -1,7 +1,7 @@
 # NOTE we leave the add_kernel not protected by LITE_WITH_ARM so that all the kernels will be registered
 # to the model_optimize_tool.
 
-if(LITE_WITH_ARM AND NOT LITE_ON_MODEL_OPTIMIZE_TOOL)
+if((LITE_WITH_ARM) AND NOT LITE_ON_MODEL_OPTIMIZE_TOOL)
   set(IS_FAKED_KERNEL false CACHE INTERNAL "")
   set(lite_kernel_deps ${lite_kernel_deps} math_arm CACHE INTERNAL "")
 elseif(LITE_ON_MODEL_OPTIMIZE_TOOL OR LITE_WITH_PYTHON)

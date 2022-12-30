@@ -124,6 +124,98 @@ if(LITE_WITH_ARM)
   message(STATUS "Lite ARM Compile ${ARM_TARGET_OS} with ${ARM_TARGET_ARCH_ABI} ${ARM_TARGET_LANG}")
 endif()
 
+# csky config
+if(LITE_WITH_CSKY)
+  set(CSKY_TARGET_OS_LIST "cskylinux")
+  set(CSKY_TARGET_ARCH_ABI_LIST "csky")
+  set(CSKY_TARGET_LANG_LIST "gcc" "clang")
+  set(CSKY_TARGET_LIB_TYPE_LIST "static" "shared")
+
+  # OS check
+  if(NOT DEFINED CSKY_TARGET_OS)
+    set(CSKY_TARGET_OS "cskylinux")
+  else()
+    if(NOT CSKY_TARGET_OS IN_LIST CSKY_TARGET_OS_LIST)
+      message(FATAL_ERROR "CSKY_TARGET_OS should be one of ${CSKY_TARGET_OS_LIST}")
+    endif()
+  endif()
+
+  # Abi check
+  if(NOT DEFINED CSKY_TARGET_ARCH_ABI)
+    set(CSKY_TARGET_ARCH_ABI "csky")
+  else()
+    if(NOT CSKY_TARGET_ARCH_ABI IN_LIST CSKY_TARGET_ARCH_ABI_LIST)
+      message(FATAL_ERROR "CSKY_TARGET_ARCH_ABI should be one of ${CSKY_TARGET_ARCH_ABI_LIST}")
+    endif()
+  endif()
+
+  # Toolchain check
+  if(NOT DEFINED CSKY_TARGET_LANG)
+    set(CSKY_TARGET_LANG "gcc")
+  else()
+    if(NOT CSKY_TARGET_LANG IN_LIST CSKY_TARGET_LANG_LIST)
+      message(FATAL_ERROR "CSKY_TARGET_LANG should be one of ${CSKY_TARGET_LANG_LIST}")
+    endif()
+  endif()
+
+  # Target lib check
+  if(NOT DEFINED CSKY_TARGET_LIB_TYPE)
+    set(CSKY_TARGET_LIB_TYPE "static")
+  else()
+    if(NOT CSKY_TARGET_LIB_TYPE IN_LIST CSKY_TARGET_LIB_TYPE_LIST)
+      message(FATAL_ERROR "CSKY_TARGET_LIB_TYPE should be one of ${CSKY_TARGET_LIB_TYPE_LIST}")
+    endif()
+  endif()
+
+  # Toolchain config
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=ck860f -Wa,-mljump -fPIC ")
+  message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
+  # OS settings
+  if(CSKY_TARGET_OS STREQUAL "cskylinux")
+    include(os/cskylinux)
+  endif()
+
+  # Detect origin host toolchain
+  set(HOST_C_COMPILER $ENV{CC})
+  set(HOST_CXX_COMPILER $ENV{CXX})
+  if(IOS OR ARMMACOS)
+    set(default_cc clang)
+    set(default_cxx clang++)
+  else()
+    set(default_cc gcc)
+    set(default_cxx g++)
+  endif()
+  if(NOT HOST_C_COMPILER)
+    find_program(HOST_C_COMPILER NAMES ${default_cc} PATH
+      /usr/bin
+      /usr/local/bin)
+  endif()
+  if(NOT HOST_CXX_COMPILER)
+    find_program(HOST_CXX_COMPILER NAMES ${default_cxx} PATH
+      /usr/bin
+      /usr/local/bin)
+  endif()
+  if(NOT HOST_C_COMPILER OR NOT EXISTS ${HOST_C_COMPILER})
+    message(FATAL_ERROR "Cannot find host C compiler. export CC=/path/to/cc")
+  endif()
+  if(NOT HOST_CXX_COMPILER OR NOT EXISTS ${HOST_CXX_COMPILER})
+    message(FATAL_ERROR "Cannot find host CXX compiler. export CXX=/path/to/cxx")
+  endif()
+  message(STATUS "Found host C compiler: " ${HOST_C_COMPILER})
+  message(STATUS "Found host CXX compiler: " ${HOST_CXX_COMPILER})
+  # Build type
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Default use Release in android" FORCE)
+  endif()
+  # Third party build type
+  if(NOT THIRD_PARTY_BUILD_TYPE)
+    set(THIRD_PARTY_BUILD_TYPE "MinSizeRel" CACHE STRING "Default use MinSizeRel in android" FORCE)
+  endif()
+  message(STATUS "Lite CSKY Compile ${CSKY_TARGET_OS} with ${CSKY_TARGET_ARCH_ABI} ${CSKY_TARGET_LANG}")
+endif()
+# end of csky config
+
 if(NOT APPLE)
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--as-needed")
 endif()

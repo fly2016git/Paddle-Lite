@@ -4,6 +4,6 @@ if(NOT WITH_TESTING)
 endif()
 
 
-if((NOT LITE_WITH_OPENCL) AND (LITE_WITH_X86 OR LITE_WITH_ARM))
+if((NOT LITE_WITH_OPENCL) AND (LITE_WITH_X86 OR LITE_WITH_ARM OR LITE_WITH_CSKY))
   lite_cc_test(test_arena_framework SRCS framework_test.cc DEPS core ops kernels)
 endif()

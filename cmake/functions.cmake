@@ -130,7 +130,7 @@ function(lite_cc_test TARGET)
             HVY_DEPS ${args_HVY_DEPS}
             CV_DEPS ${args_CV_DEPS}
             )
-  if(LITE_WITH_ARM)
+  if(LITE_WITH_ARM OR LITE_WITH_CSKY)
     cc_binary(${TARGET} SRCS ${args_SRCS} DEPS ${deps} core_tester gflags gtest)
   else()
     cc_binary(${TARGET} SRCS ${args_SRCS} DEPS ${deps} core_tester gflags gtest glog)

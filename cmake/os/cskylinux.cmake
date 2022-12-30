@@ -1,0 +1,32 @@
+set(CSKYLINUX TRUE)
+set(CSKY_TARGET_ARCH_ABI_LIST "csky")
+set(CMAKE_SYSTEM_NAME Linux)
+
+# CSKYLINUX_ARCH_ABI
+if(NOT DEFINED CSKYLINUX_ARCH_ABI)
+    set(CSKYLINUX_ARCH_ABI ${CSKY_TARGET_ARCH_ABI})
+else()
+    if(NOT CSKY_TARGET_ARCH_ABI IN_LIST CSKY_TARGET_ARCH_ABI_LIST)
+        message(FATAL_ERROR "CSKY_TARGET_ARCH_ABI should be one of ${CSKY_TARGET_ARCH_ABI_LIST}")
+    endif()
+endif()
+
+# Toolchain
+if(CSKYLINUX_ARCH_ABI STREQUAL "csky")
+    set(CMAKE_SYSTEM_PROCESSOR csky)
+    set(CMAKE_C_COMPILER "csky-abiv2-linux-gcc")
+    set(CMAKE_CXX_COMPILER "csky-abiv2-linux-g++")
+endif()
+set(HOST_C_COMPILER $ENV{CC})
+set(HOST_CXX_COMPILER $ENV{CXX})
+if(NOT ${HOST_C_COMPILER})
+    set(CMAKE_C_COMPILER ${HOST_C_COMPILER})
+endif()
+if(NOT ${HOST_CXX_COMPILER})
+    set(CMAKE_CXX_COMPILER ${HOST_CXX_COMPILER})
+endif()
+message(STATUS "cskylinux CMAKE_C_COMPILER: ${CMAKE_C_COMPILER}")
+message(STATUS "cskylinux CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
+
+# Definitions
+add_definitions(-DLITE_WITH_LINUX)

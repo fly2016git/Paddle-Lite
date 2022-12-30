@@ -101,6 +101,9 @@ TEST(PixelShuffle, precision) {
 #elif defined(LITE_WITH_ARM)
   LOG(INFO) << "test pixel_shuffle arm";
   place = TARGET(kARM);
+#elif defined(LITE_WITH_CSKY)
+  LOG(INFO) << "test pixel_shuffle csky";
+  place = TARGET(kARM);
 #else
   return;
 #endif

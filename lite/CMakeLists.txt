@@ -2,6 +2,7 @@ include(lite)
 
 message(STATUS "LITE_WITH_X86:\t${LITE_WITH_X86}")
 message(STATUS "LITE_WITH_ARM:\t${LITE_WITH_ARM}")
+message(STATUS "LITE_WITH_CSKY:\t${LITE_WITH_CSKY}")
 message(STATUS "LITE_WITH_SW:\t${LITE_WITH_SW}")
 message(STATUS "LITE_WITH_OPENCL:\t${LITE_WITH_OPENCL}")
 message(STATUS "LITE_WITH_METAL:\t${LITE_WITH_METAL}")
@@ -11,13 +12,17 @@ message(STATUS "LITE_WITH_PROFILE:\t${LITE_WITH_PROFILE}")
 message(STATUS "LITE_WITH_CV:\t${LITE_WITH_CV}")
 
 set(LITE_MODEL_DIR "${THIRD_PARTY_PATH}/install")
-set(LITE_ON_MOBILE ${LITE_WITH_ARM})
+if(LITE_WITH_CSKY)
+    set(LITE_ON_MOBILE ${LITE_WITH_CSKY})
+else()
+    set(LITE_ON_MOBILE ${LITE_WITH_ARM})
+endif()
 
 add_subdirectory(backends)
 add_subdirectory(utils)
 add_subdirectory(operators)
 add_subdirectory(kernels)
-add_subdirectory(core)
+add_subdirectory(core)   ## ERROR
 add_subdirectory(model_parser)
 add_subdirectory(api)
 
@@ -177,9 +182,14 @@ endif()
 # ----------------------------- PUBLISH -----------------------------
 # The final target for publish lite lib
 add_custom_target(publish_inference)
-if (LITE_WITH_ARM)
+if (LITE_WITH_ARM OR LITE_WITH_CSKY)
     # for publish
-    set(INFER_LITE_PUBLISH_ROOT "${PADDLE_BINARY_DIR}/inference_lite_lib.${ARM_TARGET_OS}.${ARM_TARGET_ARCH_ABI}")
+    if (LITE_WITH_ARM)
+        set(INFER_LITE_PUBLISH_ROOT "${PADDLE_BINARY_DIR}/inference_lite_lib.${ARM_TARGET_OS}.${ARM_TARGET_ARCH_ABI}")
+    endif(LITE_WITH_ARM)
+    if (LITE_WITH_CSKY)
+        set(INFER_LITE_PUBLISH_ROOT "${PADDLE_BINARY_DIR}/inference_lite_lib.${CSKY_TARGET_OS}.${CSKY_TARGET_ARCH_ABI}")
+    endif(LITE_WITH_CSKY)
     if (LITE_WITH_OPENCL)
         set(INFER_LITE_PUBLISH_ROOT "${INFER_LITE_PUBLISH_ROOT}.opencl")
     endif(LITE_WITH_OPENCL)
@@ -405,7 +415,7 @@ if (LITE_WITH_X86)
   endif()
 endif()
 
-if (LITE_WITH_ARM)
+if (LITE_WITH_ARM OR LITE_WITH_CSKY)
     if (NOT LITE_ON_TINY_PUBLISH)
         # add cxx lib
         add_custom_target(publish_inference_cxx_lib ${TARGET}
@@ -417,21 +427,21 @@ if (LITE_WITH_ARM)
                 COMMAND cp "${PADDLE_BINARY_DIR}/lite/api/paddle_use_ops.h" "${INFER_LITE_PUBLISH_ROOT}/cxx/include"
                 COMMAND cp "${PADDLE_BINARY_DIR}/libpaddle_api_full_bundled.a" "${INFER_LITE_PUBLISH_ROOT}/cxx/lib"
                 COMMAND cp "${PADDLE_BINARY_DIR}/libpaddle_api_light_bundled.a" "${INFER_LITE_PUBLISH_ROOT}/cxx/lib"
-                COMMAND cp "${PADDLE_BINARY_DIR}/lite/api/test_model_bin" "${INFER_LITE_PUBLISH_ROOT}/bin"
+                # COMMAND cp "${PADDLE_BINARY_DIR}/lite/api/test_model_bin" "${INFER_LITE_PUBLISH_ROOT}/bin"
                 COMMAND cp "${PADDLE_SOURCE_DIR}/lite/utils/cv/paddle_*.h" "${INFER_LITE_PUBLISH_ROOT}/cxx/include"
                 )
             if(NOT IOS)
                 add_dependencies(publish_inference_cxx_lib bundle_full_api)
                 add_dependencies(publish_inference_cxx_lib bundle_light_api)
-                add_dependencies(publish_inference_cxx_lib test_model_bin)
-                add_dependencies(publish_inference_cxx_lib benchmark_bin)
-                if (ARM_TARGET_OS STREQUAL "android" OR ARM_TARGET_OS STREQUAL "armlinux" OR ARM_TARGET_OS STREQUAL "armmacos" OR ARM_TARGET_OS STREQUAL "qnx")
+                # add_dependencies(publish_inference_cxx_lib test_model_bin)
+                # add_dependencies(publish_inference_cxx_lib benchmark_bin)
+                if (ARM_TARGET_OS STREQUAL "android" OR ARM_TARGET_OS STREQUAL "armlinux" OR ARM_TARGET_OS STREQUAL "armmacos" OR ARM_TARGET_OS STREQUAL "qnx" OR CSKY_TARGET_OS STREQUAL "cskylinux")
                     add_dependencies(publish_inference_cxx_lib paddle_full_api_shared)
                     add_dependencies(publish_inference paddle_light_api_shared)
                     add_custom_command(TARGET publish_inference_cxx_lib
                           COMMAND cp ${PADDLE_BINARY_DIR}/lite/api/libpaddle_light_api_shared* ${INFER_LITE_PUBLISH_ROOT}/cxx/lib
                           COMMAND cp ${PADDLE_BINARY_DIR}/lite/api/libpaddle_full_api_shared* ${INFER_LITE_PUBLISH_ROOT}/cxx/lib
-                          COMMAND cp "${PADDLE_BINARY_DIR}/lite/api/tools/benchmark/benchmark_bin" "${INFER_LITE_PUBLISH_ROOT}/bin"
+                          # COMMAND cp "${PADDLE_BINARY_DIR}/lite/api/tools/benchmark/benchmark_bin" "${INFER_LITE_PUBLISH_ROOT}/bin"
                           )
                 elseif(ARM_TARGET_OS STREQUAL "armmacos")
                     add_dependencies(publish_inference_cxx_lib paddle_full_api_shared)
@@ -460,7 +470,7 @@ if (LITE_WITH_ARM)
             add_dependencies(tiny_publish_cxx_lib paddle_api_light_bundled)
             add_dependencies(publish_inference tiny_publish_cxx_lib)
         else()
-            if ((ARM_TARGET_OS STREQUAL "android") OR (ARM_TARGET_OS STREQUAL "armlinux") OR (ARM_TARGET_OS STREQUAL "qnx"))
+            if ((ARM_TARGET_OS STREQUAL "android") OR (ARM_TARGET_OS STREQUAL "armlinux") OR (ARM_TARGET_OS STREQUAL "qnx") OR (CSKY_TARGET_OS STREQUAL "cskylinux"))
                 # compile cplus shared library, pack the cplus demo and lib into the publish directory.
                 add_custom_target(tiny_publish_cxx_lib ${TARGET}
                     COMMAND mkdir -p "${INFER_LITE_PUBLISH_ROOT}/cxx"

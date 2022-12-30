@@ -56,6 +56,8 @@ if(NOT LITE_ON_TINY_PUBLISH)
   lite_cc_library(paddle_api_full SRCS ${FULL_API_SRC} DEPS ${full_lib_DEPS} ${external_libs_DEPS})
 endif()
 
+message(STATUS "------------------ lite/api/CMakeLists.txt: 59 -------------------")
+message(STATUS "LITE_ON_TINY_PUBLISH: ${LITE_ON_TINY_PUBLISH}")
 if (NOT LITE_ON_TINY_PUBLISH)
     #dynamic library
     lite_cc_library(paddle_light_api_shared SHARED SRCS ${LIGHT_API_SRC}
@@ -96,7 +98,7 @@ if (NOT LITE_ON_TINY_PUBLISH)
         set_target_properties(paddle_light_api_shared PROPERTIES LINK_FLAGS ${LINK_FLAGS})
         add_dependencies(paddle_light_api_shared custom_linker_map)
    endif()
-   if(NOT WIN32 AND NOT ARM_TARGET_OS STREQUAL "android" AND WITH_TESTING)
+   if(NOT WIN32 AND NOT CSKY_TARGET_OS AND NOT ARM_TARGET_OS STREQUAL "android" AND WITH_TESTING)
         # check symbol hidden
         FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/check_symbol.cmake
             "execute_process(COMMAND sh -c \"${CMAKE_CURRENT_SOURCE_DIR}/../tools/check_symbol.sh"
@@ -174,7 +176,7 @@ if(WITH_TESTING)
 endif()
 
 # java API
-if (LITE_WITH_JAVA AND LITE_WITH_ARM)
+if (LITE_WITH_JAVA AND (LITE_WITH_ARM OR LITE_WITH_CSKY))
     add_subdirectory(android)
 endif()
 # python API
@@ -188,13 +190,15 @@ if(LITE_WITH_PYTHON)
 endif()
 
 if(NOT IOS AND NOT LITE_ON_TINY_PUBLISH)
-    # test_model_bin
-    lite_cc_binary(test_model_bin SRCS tools/model_test.cc
-        DEPS gflags
-        CV_DEPS paddle_cv_arm)
+    if (NOT LITE_WITH_CSKY)
+        # test_model_bin
+        lite_cc_binary(test_model_bin SRCS tools/model_test.cc
+            DEPS gflags
+            CV_DEPS paddle_cv_arm)
 
-    # benchmark_bin
-    add_subdirectory(tools/benchmark)
+        # benchmark_bin
+        add_subdirectory(tools/benchmark)
+    endif()
 endif()
 
 # opt tool
