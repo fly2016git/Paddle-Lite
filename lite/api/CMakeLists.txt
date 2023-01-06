@@ -190,15 +190,15 @@ if(LITE_WITH_PYTHON)
 endif()
 
 if(NOT IOS AND NOT LITE_ON_TINY_PUBLISH)
-    if (NOT LITE_WITH_CSKY)
-        # test_model_bin
-        lite_cc_binary(test_model_bin SRCS tools/model_test.cc
-            DEPS gflags
-            CV_DEPS paddle_cv_arm)
+    # if (NOT LITE_WITH_CSKY)
+    # test_model_bin
+    lite_cc_binary(test_model_bin SRCS tools/model_test.cc
+        DEPS gflags
+        CV_DEPS paddle_cv_arm)
 
-        # benchmark_bin
-        add_subdirectory(tools/benchmark)
-    endif()
+    # benchmark_bin
+    add_subdirectory(tools/benchmark)
+    # endif()
 endif()
 
 # opt tool
